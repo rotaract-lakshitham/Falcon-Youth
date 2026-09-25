@@ -1,0 +1,34 @@
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const multer = require('multer');
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Image storage (for event banners, member photos, business logos)
+const imageStorage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: 'racfalconyouth/images',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+    transformation: [{ width: 800, quality: 'auto' }],
+  },
+});
+
+// PDF storage (for newsletters)
+const pdfStorage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: 'racfalconyouth/newsletters',
+    allowed_formats: ['pdf'],
+    resource_type: 'raw',
+  },
+});
+
+const uploadImage = multer({ storage: imageStorage });
+const uploadPDF = multer({ storage: pdfStorage });
+
+module.exports = { uploadImage, uploadPDF };

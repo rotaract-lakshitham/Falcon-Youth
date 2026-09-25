@@ -1,0 +1,24 @@
+# Dependencies
+node_modules
+**/node_modules
+
+# Environment & Secrets
+.env
+backend/.env
+credentials.txt
+
+# Production / Build outputs
+dist
+build
+uploads
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS / IDE
+.DS_Store
+.vscode
+.idea
