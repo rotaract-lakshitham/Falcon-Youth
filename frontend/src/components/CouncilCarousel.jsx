@@ -59,31 +59,37 @@ export default function CouncilCarousel({ members }) {
               boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
             }} className="council-card">
               
-              <div style={{
-                position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-                background: m.photoUrl ? `url(${m.photoUrl}) center/cover` : 'linear-gradient(135deg,var(--maroon),var(--maroon-dark))',
-                display: 'flex', alignItems: 'center', justifyContent: 'center'
-              }}>
+              <div 
+                className="council-photo-bg"
+                style={{
+                  position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+                  background: m.photoUrl ? `url(${m.photoUrl}) center/cover no-repeat` : 'linear-gradient(135deg,var(--maroon),var(--maroon-dark))',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  filter: m.photoUrl ? 'brightness(1.12) contrast(1.08) saturate(1.05)' : 'none',
+                  transition: 'transform 0.5s ease, filter 0.5s ease'
+                }}
+              >
                 {!m.photoUrl && <User size={80} color="#ffffff" opacity={0.5} />}
               </div>
               
               {/* Overlay */}
               <div className="council-card-overlay" style={{
                 position: 'absolute', bottom: 0, left: 0, right: 0,
-                background: 'linear-gradient(to top, rgba(10,10,15,0.95) 0%, rgba(10,10,15,0.7) 60%, transparent 100%)',
+                background: 'linear-gradient(to top, rgba(10,10,15,0.92) 0%, rgba(10,10,15,0.45) 45%, transparent 75%)',
                 padding: '24px',
                 display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
                 height: '100%',
+                pointerEvents: 'none',
               }}>
-                <div style={{ transform: 'translateY(10px)', transition: 'transform 0.3s ease' }} className="council-card-content">
-                  <p style={{ color:'var(--maroon-light)', fontSize:'0.7rem', letterSpacing:'2px', textTransform:'uppercase', fontWeight:700, marginBottom:'4px' }}>
+                <div style={{ transform: 'translateY(10px)', transition: 'transform 0.3s ease', pointerEvents: 'auto' }} className="council-card-content">
+                  <p style={{ color:'var(--maroon-light)', fontSize:'0.7rem', letterSpacing:'2px', textTransform:'uppercase', fontWeight:700, marginBottom:'4px', textShadow: '0 1px 4px rgba(0,0,0,0.8)' }}>
                     {m.rotaryYear}
                   </p>
-                  <h3 style={{ color: '#fff', fontWeight:800, fontSize:'1.4rem', marginBottom:'2px' }}>{m.name}</h3>
-                  <p style={{ color:'rgba(255,255,255,0.8)', fontWeight:500, fontSize:'0.9rem', marginBottom:'12px' }}>{m.designation}</p>
+                  <h3 style={{ color: '#fff', fontWeight:800, fontSize:'1.4rem', marginBottom:'2px', textShadow: '0 2px 6px rgba(0,0,0,0.8)' }}>{m.name}</h3>
+                  <p style={{ color:'rgba(255,255,255,0.9)', fontWeight:500, fontSize:'0.9rem', marginBottom:'12px', textShadow: '0 1px 4px rgba(0,0,0,0.8)' }}>{m.designation}</p>
                   
                   <div className="council-card-hidden" style={{ opacity: 0, maxHeight: 0, overflow: 'hidden', transition: 'all 0.3s ease' }}>
-                    {m.bio && <p style={{ color:'rgba(255,255,255,0.6)', fontSize:'0.85rem', lineHeight:1.5, marginBottom:'16px' }}>{m.bio}</p>}
+                    {m.bio && <p style={{ color:'rgba(255,255,255,0.85)', fontSize:'0.85rem', lineHeight:1.5, marginBottom:'16px', textShadow: '0 1px 4px rgba(0,0,0,0.8)' }}>{m.bio}</p>}
                     <div style={{ display:'flex', gap:10 }}>
                       {m.socials?.linkedin  && <a href={m.socials.linkedin} target="_blank" rel="noreferrer" style={socialBtn}><LinkedinIcon size={16}/></a>}
                       {m.socials?.instagram && <a href={m.socials.instagram} target="_blank" rel="noreferrer" style={socialBtn}><InstagramIcon size={16}/></a>}

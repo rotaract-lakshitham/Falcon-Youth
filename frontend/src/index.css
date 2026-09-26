@@ -269,6 +269,11 @@ select.form-control option { background: var(--bg-700); color: var(--text-primar
   box-shadow: 0 16px 40px rgba(110, 30, 36, 0.2);
 }
 
+.council-card:hover .council-photo-bg {
+  transform: scale(1.06);
+  filter: brightness(1.18) contrast(1.1) saturate(1.08) !important;
+}
+
 .council-card:hover .council-card-content {
   transform: translateY(0) !important;
 }
