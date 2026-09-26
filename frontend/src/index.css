@@ -87,8 +87,6 @@ input, textarea, select { font-family: 'Outfit', sans-serif; }
 
 .section-tag {
   display: inline-block;
-  position: relative;
-  z-index: 2;
   background: rgba(110, 30, 36, 0.12);
   border: 1px solid rgba(110, 30, 36, 0.3);
   color: #4A1217;
@@ -99,8 +97,6 @@ input, textarea, select { font-family: 'Outfit', sans-serif; }
   padding: 6px 18px;
   border-radius: 50px;
   margin-bottom: 16px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 2px 8px rgba(110, 30, 36, 0.06);
   transition: var(--transition);
 }

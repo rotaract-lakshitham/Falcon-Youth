@@ -89,16 +89,7 @@ export default function FalconBackground() {
     }}>
       
       {/* ── PARALLAX MOUNTAINS ── */}
-      <div 
-        ref={mntRef} 
-        style={{ 
-          position: 'absolute', top: 0, left: 0, width: '100%', height: '700px', maxHeight: '700px',
-          overflow: 'hidden',
-          WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 90%)',
-          maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 90%)',
-          willChange: 'transform' 
-        }}
-      >
+      <div ref={mntRef} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '1200px', willChange: 'transform' }}>
         <svg viewBox="0 0 1440 1000" preserveAspectRatio="xMidYMax slice" style={{ width: '100%', height: '100%' }}>
           {/* Layer 1 (Back) */}
           <path fill="#350E18" d="M0,200 L150,450 L350,300 L550,550 L720,620 L890,500 L1100,250 L1300,450 L1440,300 L1440,1000 L0,1000 Z" />
