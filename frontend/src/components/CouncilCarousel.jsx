@@ -21,6 +21,7 @@ const LinkedinIcon = ({ size = 16, color = "currentColor" }) => (
 export default function CouncilCarousel({ members }) {
   const [current, setCurrent] = useState(0);
   const [itemsPerView, setItemsPerView] = useState(3);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -37,14 +38,29 @@ export default function CouncilCarousel({ members }) {
 
   const maxIndex = Math.max(0, members.length - itemsPerView);
   
+  // Slow motion horizontal auto-scroll (3.5s per step, pauses on hover)
+  useEffect(() => {
+    if (isPaused || maxIndex <= 0) return;
+
+    const interval = setInterval(() => {
+      setCurrent(prev => (prev >= maxIndex ? 0 : prev + 1));
+    }, 3500);
+
+    return () => clearInterval(interval);
+  }, [isPaused, maxIndex]);
+
   const prev = () => setCurrent(c => Math.max(0, c - 1));
   const next = () => setCurrent(c => Math.min(maxIndex, c + 1));
 
   return (
-    <div style={{ position:'relative', maxWidth: 1100, margin:'0 auto', userSelect:'none', padding: '0 50px' }}>
+    <div 
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      style={{ position:'relative', maxWidth: 1100, margin:'0 auto', userSelect:'none', padding: '0 50px' }}
+    >
       <div style={{ overflow: 'hidden' }}>
         <div style={{
-          display: 'flex', gap: '24px', transition: 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)',
+          display: 'flex', gap: '24px', transition: 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)',
           transform: `translateX(calc(-${current * (100 / itemsPerView)}% - ${current * (24 / itemsPerView)}px))`
         }}>
           {members.map((m, i) => (
