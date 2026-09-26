@@ -87,16 +87,25 @@ input, textarea, select { font-family: 'Outfit', sans-serif; }
 
 .section-tag {
   display: inline-block;
-  background: rgba(110, 30, 36, 0.08);
-  border: 1px solid var(--glass-border);
-  color: var(--maroon);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 2px;
+  background: rgba(110, 30, 36, 0.12);
+  border: 1px solid rgba(110, 30, 36, 0.3);
+  color: #4A1217;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 2.5px;
   text-transform: uppercase;
-  padding: 6px 16px;
+  padding: 6px 18px;
   border-radius: 50px;
   margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(110, 30, 36, 0.06);
+  transition: var(--transition);
+}
+
+[data-theme='dark'] .section-tag {
+  background: rgba(224, 88, 100, 0.18);
+  border: 1px solid rgba(224, 88, 100, 0.4);
+  color: #FFB3BA;
+  box-shadow: 0 2px 12px rgba(224, 88, 100, 0.15);
 }
 
 .section-title {
