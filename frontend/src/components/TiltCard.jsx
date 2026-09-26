@@ -1,6 +1,6 @@
 import React, { useRef, useState, useCallback } from 'react';
 
-export default function TiltCard({ children, style, className }) {
+export default function TiltCard({ children, style, className, onClick, ...rest }) {
   const cardRef = useRef(null);
   const [tiltStyle, setTiltStyle] = useState({ transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)' });
 
@@ -37,6 +37,8 @@ export default function TiltCard({ children, style, className }) {
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onClick={onClick}
+      {...rest}
       style={{
         ...style,
         ...tiltStyle,
