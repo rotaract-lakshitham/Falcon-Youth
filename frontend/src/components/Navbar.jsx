@@ -77,7 +77,9 @@ export default function Navbar() {
     <nav className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
       <div className="container navbar__inner">
         <Link to="/" className="navbar__logo" onClick={(e) => handleNavClick(e, '/')}>
-          <img src="/falcon-logo.png" alt="Rotaract Falcon Youth" style={{ height: '75px', width: 'auto', transform: 'scale(3.2)', transformOrigin: 'left center' }} />
+          <div style={{ height: '52px', width: '210px', display: 'flex', alignItems: 'center', overflow: 'hidden', flexShrink: 0 }}>
+            <img src="/falcon-logo.png" alt="Rotaract Falcon Youth" style={{ height: '62px', width: 'auto', transform: 'scale(3.2)', transformOrigin: 'left center' }} />
+          </div>
         </Link>
 
         {/* Desktop links */}
