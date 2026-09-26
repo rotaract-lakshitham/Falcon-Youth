@@ -283,6 +283,31 @@ select.form-control option { background: var(--bg-700); color: var(--text-primar
   max-height: 200px !important;
 }
 
+/* ── Council Marquee ────────────────────────── */
+@keyframes councilMarquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.council-marquee-container {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  padding: 10px 0 20px;
+}
+
+.council-marquee-track {
+  display: flex;
+  gap: 24px;
+  width: max-content;
+  animation: councilMarquee 32s linear infinite;
+  will-change: transform;
+}
+
+.council-marquee-track:hover {
+  animation-play-state: paused;
+}
+
 .council-card-hidden {
   transition: max-height 0.4s ease, opacity 0.4s ease !important;
 }

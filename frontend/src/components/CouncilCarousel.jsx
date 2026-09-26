@@ -19,117 +19,69 @@ const LinkedinIcon = ({ size = 16, color = "currentColor" }) => (
 );
 
 export default function CouncilCarousel({ members }) {
-  const [current, setCurrent] = useState(0);
-  const [itemsPerView, setItemsPerView] = useState(3);
-  const [isPaused, setIsPaused] = useState(false);
+  if (!members || !members.length) return <p style={{ color:'var(--text-muted)', textAlign:'center' }}>No members added yet.</p>;
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) setItemsPerView(1);
-      else if (window.innerWidth < 1024) setItemsPerView(2);
-      else setItemsPerView(3);
-    };
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  if (!members.length) return <p style={{ color:'var(--text-muted)', textAlign:'center' }}>No members added yet.</p>;
-
-  const maxIndex = Math.max(0, members.length - itemsPerView);
-  
-  // Slow motion horizontal auto-scroll (3.5s per step, pauses on hover)
-  useEffect(() => {
-    if (isPaused || maxIndex <= 0) return;
-
-    const interval = setInterval(() => {
-      setCurrent(prev => (prev >= maxIndex ? 0 : prev + 1));
-    }, 3500);
-
-    return () => clearInterval(interval);
-  }, [isPaused, maxIndex]);
-
-  const prev = () => setCurrent(c => Math.max(0, c - 1));
-  const next = () => setCurrent(c => Math.min(maxIndex, c + 1));
+  // Duplicate member items to construct a 100% seamless infinite marquee loop
+  const displayMembers = members.length < 5 
+    ? [...members, ...members, ...members, ...members] 
+    : [...members, ...members];
 
   return (
-    <div 
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-      style={{ position:'relative', maxWidth: 1100, margin:'0 auto', userSelect:'none', padding: '0 50px' }}
-    >
-      <div style={{ overflow: 'hidden' }}>
-        <div style={{
-          display: 'flex', gap: '24px', transition: 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)',
-          transform: `translateX(calc(-${current * (100 / itemsPerView)}% - ${current * (24 / itemsPerView)}px))`
-        }}>
-          {members.map((m, i) => (
-            <TiltCard key={m._id || i} style={{
-              flex: `0 0 calc(${100 / itemsPerView}% - ${(24 * (itemsPerView - 1)) / itemsPerView}px)`,
-              position: 'relative',
-              borderRadius: '16px',
-              overflow: 'hidden',
-              background: 'var(--bg-card)',
-              border: '1px solid var(--glass-border)',
-              aspectRatio: '1/1',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
-            }} className="council-card">
-              
-              <div 
-                className="council-photo-bg"
-                style={{
-                  position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-                  background: m.photoUrl ? `url(${m.photoUrl}) center/cover no-repeat` : 'linear-gradient(135deg,var(--maroon),var(--maroon-dark))',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  filter: m.photoUrl ? 'brightness(1.12) contrast(1.08) saturate(1.05)' : 'none',
-                  transition: 'transform 0.5s ease, filter 0.5s ease'
-                }}
-              >
-                {!m.photoUrl && <User size={80} color="#ffffff" opacity={0.5} />}
-              </div>
-              
-              {/* Overlay */}
-              <div className="council-card-overlay" style={{
-                position: 'absolute', bottom: 0, left: 0, right: 0,
-                background: 'linear-gradient(to top, rgba(10,10,15,0.92) 0%, rgba(10,10,15,0.45) 45%, transparent 75%)',
-                padding: '24px',
-                display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
-                height: '100%',
-                pointerEvents: 'none',
-              }}>
-                <div style={{ transform: 'translateY(10px)', transition: 'transform 0.3s ease', pointerEvents: 'auto' }} className="council-card-content">
-                  <p style={{ color:'var(--maroon-light)', fontSize:'0.7rem', letterSpacing:'2px', textTransform:'uppercase', fontWeight:700, marginBottom:'4px', textShadow: '0 1px 4px rgba(0,0,0,0.8)' }}>
-                    {m.rotaryYear}
-                  </p>
-                  <h3 style={{ color: '#fff', fontWeight:800, fontSize:'1.4rem', marginBottom:'2px', textShadow: '0 2px 6px rgba(0,0,0,0.8)' }}>{m.name}</h3>
-                  <p style={{ color:'rgba(255,255,255,0.9)', fontWeight:500, fontSize:'0.9rem', marginBottom:'12px', textShadow: '0 1px 4px rgba(0,0,0,0.8)' }}>{m.designation}</p>
-                  
-                  <div className="council-card-hidden" style={{ opacity: 0, maxHeight: 0, overflow: 'hidden', transition: 'all 0.3s ease' }}>
-                    {m.bio && <p style={{ color:'rgba(255,255,255,0.85)', fontSize:'0.85rem', lineHeight:1.5, marginBottom:'16px', textShadow: '0 1px 4px rgba(0,0,0,0.8)' }}>{m.bio}</p>}
-                    <div style={{ display:'flex', gap:10 }}>
-                      {m.socials?.linkedin  && <a href={m.socials.linkedin} target="_blank" rel="noreferrer" style={socialBtn}><LinkedinIcon size={16}/></a>}
-                      {m.socials?.instagram && <a href={m.socials.instagram} target="_blank" rel="noreferrer" style={socialBtn}><InstagramIcon size={16}/></a>}
-                      {m.socials?.email     && <a href={`mailto:${m.socials.email}`} style={socialBtn}><Mail size={16}/></a>}
-                    </div>
+    <div className="council-marquee-container" style={{ position:'relative', userSelect:'none' }}>
+      <div className="council-marquee-track">
+        {displayMembers.map((m, i) => (
+          <TiltCard key={`${m._id || m.name}-${i}`} style={{
+            flex: '0 0 320px',
+            width: '320px',
+            position: 'relative',
+            borderRadius: '16px',
+            overflow: 'hidden',
+            background: 'var(--bg-card)',
+            border: '1px solid var(--glass-border)',
+            aspectRatio: '1/1',
+            boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+          }} className="council-card">
+            
+            <div 
+              className="council-photo-bg"
+              style={{
+                position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+                background: m.photoUrl ? `url(${m.photoUrl}) center/cover no-repeat` : 'linear-gradient(135deg,var(--maroon),var(--maroon-dark))',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                filter: m.photoUrl ? 'brightness(1.12) contrast(1.08) saturate(1.05)' : 'none',
+                transition: 'transform 0.5s ease, filter 0.5s ease'
+              }}
+            >
+              {!m.photoUrl && <User size={80} color="#ffffff" opacity={0.5} />}
+            </div>
+            
+            {/* Overlay */}
+            <div className="council-card-overlay" style={{
+              position: 'absolute', bottom: 0, left: 0, right: 0,
+              background: 'linear-gradient(to top, rgba(10,10,15,0.92) 0%, rgba(10,10,15,0.45) 45%, transparent 75%)',
+              padding: '24px',
+              display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
+              height: '100%',
+              pointerEvents: 'none',
+            }}>
+              <div style={{ transform: 'translateY(10px)', transition: 'transform 0.3s ease', pointerEvents: 'auto' }} className="council-card-content">
+                <p style={{ color:'var(--maroon-light)', fontSize:'0.7rem', letterSpacing:'2px', textTransform:'uppercase', fontWeight:700, marginBottom:'4px', textShadow: '0 1px 4px rgba(0,0,0,0.8)' }}>
+                  {m.rotaryYear}
+                </p>
+                <h3 style={{ color: '#fff', fontWeight:800, fontSize:'1.4rem', marginBottom:'2px', textShadow: '0 2px 6px rgba(0,0,0,0.8)' }}>{m.name}</h3>
+                <p style={{ color:'rgba(255,255,255,0.9)', fontWeight:500, fontSize:'0.9rem', marginBottom:'12px', textShadow: '0 1px 4px rgba(0,0,0,0.8)' }}>{m.designation}</p>
+                
+                <div className="council-card-hidden" style={{ opacity: 0, maxHeight: 0, overflow: 'hidden', transition: 'all 0.3s ease' }}>
+                  {m.bio && <p style={{ color:'rgba(255,255,255,0.85)', fontSize:'0.85rem', lineHeight:1.5, marginBottom:'16px', textShadow: '0 1px 4px rgba(0,0,0,0.8)' }}>{m.bio}</p>}
+                  <div style={{ display:'flex', gap:10 }}>
+                    {m.socials?.linkedin  && <a href={m.socials.linkedin} target="_blank" rel="noreferrer" style={socialBtn}><LinkedinIcon size={16}/></a>}
+                    {m.socials?.instagram && <a href={m.socials.instagram} target="_blank" rel="noreferrer" style={socialBtn}><InstagramIcon size={16}/></a>}
+                    {m.socials?.email     && <a href={`mailto:${m.socials.email}`} style={socialBtn}><Mail size={16}/></a>}
                   </div>
                 </div>
               </div>
-            </TiltCard>
-          ))}
-        </div>
-      </div>
-
-      <button onClick={prev} disabled={current === 0} aria-label="previous" style={{...arrowStyle('left'), opacity: current === 0 ? 0.3 : 1}}><ChevronLeft size={20} /></button>
-      <button onClick={next} disabled={current === maxIndex} aria-label="next" style={{...arrowStyle('right'), opacity: current === maxIndex ? 0.3 : 1}}><ChevronRight size={20} /></button>
-
-      {/* Dots */}
-      <div style={{ display:'flex', justifyContent:'center', gap:8, marginTop:24 }}>
-        {Array.from({ length: maxIndex + 1 }).map((_, i) => (
-          <button key={i} onClick={() => setCurrent(i)} aria-label={`page ${i+1}`} style={{
-            width: i===current ? 24 : 8, height:8, borderRadius:4,
-            background: i===current ? 'var(--maroon)' : 'var(--glass-border)',
-            border:'none', cursor:'pointer', transition:'all 0.3s',
-          }} />
+            </div>
+          </TiltCard>
         ))}
       </div>
     </div>
